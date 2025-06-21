@@ -1,15 +1,26 @@
 def read_file_to_dict(filename):
-    with open(filename,'r') as f:
-        file = f.read()
-    file = file.split(';')
+    with open(filename, 'r') as f:
+        content = f.read()
+        
+    file = content.split(';')
     file_dict = {}
+    
     for item in file:
-        if item.strip() != '':
-            item = item.split(':')
-            if item[0] in file_dict:
-                file_dict[item[0]].append(float(item[1]))
+        item = item.strip()
+        if item == '':
+            continue
+        try:
+            key, value = item.split(':')
+            key = key.strip()
+            value = float(value.strip())
+            if key in file_dict:
+                file_dict[key].append(value)
             else:
-                file_dict[item[0]] = [float(item[1])]
+                file_dict[key] = [value]
+        except ValueError as e:
+            print(f"Entrada ignorada por error: '{item}' ({e})")
+            continue
+            
     return file_dict
 
 def process_dict(data):
